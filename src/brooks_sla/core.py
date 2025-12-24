@@ -1,6 +1,121 @@
+from enum import IntEnum
 from pydantic import BaseModel, Field, model_validator
 from enum import IntEnum
-from typing import Literal, List, Union
+
+
+class FlowRateUnit(IntEnum):
+    CUBIC_FEET_PER_MIN = 15
+    GALLONS_PER_MIN = 16
+    LITERS_PER_MIN = 17
+    IMP_GALLONS_PER_MIN = 18
+    CUBIC_METERS_PER_HOUR = 19
+    GALLONS_PER_SEC = 22
+    LITERS_PER_SEC = 24
+    CUBIC_FEET_PER_SEC = 26
+    CUBIC_FEET_PER_DAY = 27
+    CUBIC_METERS_PER_SEC = 28
+    CUBIC_METERS_PER_DAY = 29
+    IMP_GALLONS_PER_HOUR = 30
+    IMP_GALLONS_PER_DAY = 31
+    PERCENT = 57
+    GRAMS_PER_SEC = 70
+    GRAMS_PER_MIN = 71
+    GRAMS_PER_HOUR = 72
+    KG_PER_SEC = 73
+    KG_PER_MIN = 74
+    KG_PER_HOUR = 75
+    KG_PER_DAY = 76
+    LBS_PER_SEC = 80
+    LBS_PER_MIN = 81
+    LBS_PER_HOUR = 82
+    LBS_PER_DAY = 83
+    CUBIC_FEET_PER_HOUR = 130
+    CUBIC_METERS_PER_MIN = 131
+    BARRELS_PER_SEC = 132
+    BARRELS_PER_MIN = 133
+    BARRELS_PER_HOUR = 134
+    BARRELS_PER_DAY = 135
+    GALLONS_PER_HOUR = 136
+    IMP_GALLONS_PER_SEC = 137
+    LITERS_PER_HOUR = 138
+    ML_PER_SEC = 170
+    ML_PER_MIN = 171
+    ML_PER_HOUR = 172
+    ML_PER_DAY = 173
+    LITERS_PER_DAY = 174
+    CUBIC_INCHES_PER_SEC = 200
+    CUBIC_INCHES_PER_MIN = 201
+    CUBIC_INCHES_PER_HOUR = 202
+    CUBIC_INCHES_PER_DAY = 203
+    GALLONS_PER_DAY = 235
+    CC_PER_MIN = 240
+    CC_PER_SEC = 241
+    CC_PER_HOUR = 242
+    CC_PER_DAY = 248
+    GRAMS_PER_DAY = 243
+    OUNCES_PER_SEC = 244
+    OUNCES_PER_MIN = 245
+    OUNCES_PER_HOUR = 246
+    OUNCES_PER_DAY = 247
+    NOT_USED = 250
+
+class FlowReference(IntEnum):
+    NORMAL = 0
+    STANDARD = 1
+    CALIBRATION = 2
+
+class PressureUnit(IntEnum):
+    IN_H2O = 1
+    IN_HG = 2
+    FT_H2O = 3
+
+    PSI_A = 5
+    PSI_B = 6
+
+    BAR = 7
+    MILLIBAR = 8
+
+    PASCAL = 11
+    KILOPASCAL = 12
+    TORR = 13
+    STANDARD_ATMOSPHERE = 14
+
+    CM_H2O = 227
+    GR_PER_CM2 = 228
+    MM_HG = 229
+    MILLITORR = 230
+    KG_PER_CM2_A = 231
+    ATM = 232
+    FT_H2O_ALT = 233
+    IN_H2O_ALT = 234
+    IN_HG_ALT = 235
+    TORR_ALT = 236
+    MBAR_ALT = 237
+    BAR_ALT = 238
+    PASCAL_ALT = 239
+    KPA_ALT = 240
+    COUNTS = 241
+    PERCENT = 242
+    KG_PER_CM2_B = 243
+    MILLITORR_ALT = 244
+    MM_HG_ALT = 245
+    GR_PER_CM2_ALT = 246
+
+class TemperatureUnit(IntEnum):
+    CELSIUS = 32
+    FAHRENHEIT = 33
+    KELVIN = 35
+
+
+class DensityUnit(IntEnum):
+    GRAMS_PER_CM3 = 91
+    KG_PER_M3 = 92
+    LBS_PER_GAL = 93
+    LBS_PER_FT3 = 94
+    GRAMS_PER_ML = 95
+    KG_PER_L = 96
+    GRAMS_PER_L = 97
+    LBS_PER_IN3 = 98
 
 
 class CommunicationStatus(BaseModel):
@@ -54,47 +169,37 @@ class CommandStatus(BaseModel):
         self.primary_var_out_of_range = self.error_code == 0
         return self
 
-class FrameType(IntEnum):
-    SHORT_STX_FRAME = 0x02
-    SHORT_ACK_FRAME = 0x06
-    LONG_STX_FRAME = 0x82
-    LONG_ACK_FRAME = 0x86
+class CommandErrorId(IntEnum):
+    NON = 0
+    UNDEFINED = 1
+    INVALID_SELECTION = 2
+    PARAMETER_TOO_LARGE = 3
+    PARAMETER_TOO_SMALL = 4
+    INCORRECT_BYTE_COUNT = 5
+    TRANSMITTER_SPECIFIC = 6
+    WRITE_PROTECT_MODE = 7
+    COMMAND_ERROR_8 = 8
+    COMMAND_ERROR_9 = 9
+    COMMAND_ERROR_10 = 10
+    COMMAND_ERROR_11 = 11
+    COMMAND_ERROR_12 = 12
+    COMMAND_ERROR_13 = 13
+    COMMAND_ERROR_14 = 14
+    COMMAND_ERROR_15 = 15
+    ACCESS_RESTRICTED = 16
+    DEVICE_BUSY = 32
+    COMMAND_NOT_IMPLEMENTED = 64
 
-class ShortAddressByte(BaseModel):
-    primary_master: bool = True
-    slave: int
+class DeviceStatus(BaseModel):
+    comms: CommunicationStatus
+    command: CommandStatus
 
-    def to_byte_array(self) -> List[int]:
-        value = 0 
-        if self.primary_master:
-            value = value | (1 << 7)
-        value |= self.slave
-        return [value]
-
-
-
-class LongAddressByte(BaseModel):
-    primary_master: bool = True
-    slave_burst: bool = False
-    mfg_id: int = 10
-    device_type: int = 100
-    identification_number: int = 0
-    broadcast: bool = False
-
-    def to_byte_array(self) -> List[int]:
-        byte0 = 0
-        if self.primary_master:
-            byte0 |= (1 << 7)
-        if self.slave_burst:
-            byte0 |= (1 << 6)
-        mfg_mask = b"00111111"
-        byte0 |= int(mfg_mask, 2) & self.mfg_id 
-        if self.broadcast:
-            return [byte0, self.device_type, 0, 0, 0]
-        else:
-            return [byte0, self.device_type] + list(self.identification_number.to_bytes(3, byteorder="big", signed=False))
-
-AddressByte = Union[ShortAddressByte, LongAddressByte]
+    @classmethod
+    def from_bytes(cls, first: int, second: int) -> "DeviceStatus":
+        return cls(
+            comms=CommunicationStatus(raw=first),
+            command=CommandStatus(raw=second),
+        )
 
 class Command(IntEnum):
     READ_UNIQUE_IDENTIFIER = 0
@@ -165,23 +270,3 @@ class Command(IntEnum):
     READ_HIGH_LOW_FLOW_ALARM = 247
     WRITE_HIGH_LOW_FLOW_ALARM = 248
     CHANGE_USER_PASSWORD = 250
-
-class Frame(BaseModel):
-    preamble_char: int = 0xFF
-    preamble_chars: int = 5 # Minimum 2 suffested 5
-    frame_type: FrameType
-    address: AddressByte
-    tag: List[int] # 6 digits
-    command: Command
-    data: bytearray
-
-    def to_packet(self) -> bytearray:
-        preamble = [self.preamble_char for _ in range(0, self.preamble_chars)]
-        frame_type = [self.frame_type.value]
-        address_bytes = []
-        if isinstance(ShortAddressByte, self.address):
-
-        else:
-
-
-

@@ -16,6 +16,7 @@ name = "brooks-sla"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "hart-protocol" },
     { name = "pydantic" },
     { name = "pyserial-asyncio" },
 ]
@@ -29,6 +30,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "hart-protocol", specifier = ">=2023.6.0" },
     { name = "pydantic", specifier = ">=2.12.5" },
     { name = "pyserial-asyncio", specifier = ">=0.6" },
 ]
@@ -47,6 +49,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/d8/53/6f443c9a4a8358a93a6792e2acffb9d9d5cb0a5cfd8802644b7b1c9a02e4/colorama-0.4.6.tar.gz", hash = "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44", size = 27697, upload-time = "2022-10-25T02:36:22.414Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/d1/d6/3965ed04c63042e047cb6a3e6ed1a63a35087b6a609aa3a15ed8ac56c221/colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6", size = 25335, upload-time = "2022-10-25T02:36:20.889Z" },
+]
+
+[[package]]
+name = "hart-protocol"
+version = "2023.6.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/7f/62/e9c9c9c391fbde0ac198c7f0c522bb2f9853e55703ed5bc198e11df149ad/hart_protocol-2023.6.0.tar.gz", hash = "sha256:1c97810c91cabb18947f7a0bb25749dce0984645c3647d8f294d2e2abc8f9c80", size = 12230, upload-time = "2023-06-02T20:02:54.678Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/8f/6c/4ef3ba0cf146beec139d335bf863ff4bea6f41fe3cae0f056fdffd1f681a/hart_protocol-2023.6.0-py3-none-any.whl", hash = "sha256:7027fd64f7260af63986abf18a3ee0b5564a0c86f7963b6afa079083a85abf78", size = 10883, upload-time = "2023-06-02T20:02:53.136Z" },
 ]
 
 [[package]]

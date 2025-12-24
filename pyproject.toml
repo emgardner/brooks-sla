@@ -8,6 +8,7 @@ authors = [
 ]
 requires-python = ">=3.12"
 dependencies = [
+    "hart-protocol>=2023.6.0",
     "pydantic>=2.12.5",
     "pyserial-asyncio>=0.6",
 ]
